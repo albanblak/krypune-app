@@ -1,24 +1,45 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Header from "./components/header";
+import Home from "./components/home";
+import { useState} from "react";
+import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import {UserContext} from "./utils/UserContext";
+import {decodeToken} from "react-jwt";
+import ProtectedRoute from './components/protectedRoute'
+import Dashboard from "./components/dashboard";
+import {NavTransparentContext} from './utils/NavTransparentContext'
+import AddResume from "./components/dashboard-components/add-resume";
+
 
 function App() {
+    const some = {
+            isLoggedIn: !!localStorage.getItem('user'),
+            userData: decodeToken(localStorage.getItem('user'))
+    }
+
+    const [user, setUser] = useState(some)
+
+    const [navTrans, setNavTrans] = useState(false);
+
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+          <div style={{position: 'relative'}}>
+              <UserContext.Provider value={{user, setUser}}>
+                  <NavTransparentContext.Provider value={{navTrans, setNavTrans}}>
+                      <Header/>
+                      <Switch>
+                          <Route exact path={'/'} component={Home}/>
+                          <ProtectedRoute exact path={'/dashboard/page'} component={Dashboard}/>
+                          <ProtectedRoute exact path={'/dashboard/addresume'} component={AddResume}/>
+                      </Switch>
+                  </NavTransparentContext.Provider>
+              </UserContext.Provider>
+          </div>
+      </BrowserRouter>
   );
 }
 

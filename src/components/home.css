@@ -1,0 +1,402 @@
+*{
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+.category-div{
+    margin: 20px;
+    width: 400px;
+    background-color: #F8F8F8;
+}
+
+
+.a-category{
+    text-decoration: none;
+    display: inline-block;
+    padding: 30px 0;
+}
+
+.category-div:hover{
+    background-color: #26ae61;
+    transition-duration: .5s;
+    color: white;
+}
+
+.category-div:hover > a{
+    color: white;
+}
+
+.complete-banner {
+    background-image: url('http://krypune.com/wp-content/uploads/2020/09/home-banner.png');
+    width: 100%;
+    height: 800px;
+}
+
+.banner{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: white;
+    justify-content: center;
+}
+
+.banner-upper{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.banner-upper-title{
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+#banner-text-writing{
+    font-size: 25px;
+    margin-bottom: 50px;
+    display: inline;
+    color: #888888;
+}
+
+.banner-ripples-container{
+    width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.banner-ripples{
+    width: 97%;
+    display: flex;
+}
+
+.banner-ripples p {
+    padding: 10px 20px;
+    border: 1px solid;
+    color: white;
+    background: rgba(76,175,80,0.1);
+    border-color: #4b4948;
+}
+
+.search-container{
+    width: 1300px;
+    height: 80px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.search-input{
+    width: 90%;
+    height: 90%;
+    border: none;
+    border-right: 1px solid #4b4948;
+    margin-left: 10px;
+    outline: none;
+    font-size: 20px;
+}
+
+
+.search-submit{
+    padding: 15px 25px;
+    background-color:#26AE61;
+    margin: 10px;
+    text-decoration: none;
+    color: white;
+}
+.advanced-search-link {
+    margin-top: 20px;
+}
+
+.advanced-search-link a {
+    color: lightgreen;
+}
+
+.category-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.category-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.category-title{
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: green
+}
+
+.category-body{
+    width: 1400px;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid green;
+    justify-content: center;
+}
+.a-category{
+    color: black;
+}
+
+.a-category:hover{
+    color: white;
+}
+.category-shfletoni-button{
+    text-decoration: none;
+    padding: 15px 40px;
+    background-color: #26AE61;
+    margin-top: 30px;
+    color: white;
+    font-weight: bolder;
+}
+
+.category-shfletoni-button:hover{
+    background-color: #282c34;
+    transition-duration: 0.5s;
+}
+
+
+.sifunksionon-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 400px;
+    background-color: #f4f4f5;
+}
+
+
+.sifunksionon-wraper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 1400px;
+    background-color: #f4f4f5;
+}
+
+
+.sifunksionon-body{
+    display: flex;
+    border-top: 1px solid green;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0px;
+}
+
+
+.sifunksionon-body-card{
+
+
+    background-color: #f4f4f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid lightgrey;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+.sifunksionon-body-card:last-child{
+    border-right: none;
+}
+
+
+.sifunksionon-icon{
+     font-size: 40px;
+     color: green;
+    margin-bottom: 50px;
+}
+
+.sifunksionon-body-card-title{
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.kerkesat{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.kerkesat-wrapper{
+    display: flex;
+    flex-direction: column;
+    width: 1400px;
+    align-items: flex-start;
+}
+
+.kerkesat-title {
+    border-bottom: 1px solid green;
+    margin-bottom: 30px;
+    width: 100%;
+    text-align: left;
+    color: green;
+}
+
+.kerkesat-card{
+    background-color: #F4F4F5;
+    margin: 10px
+}
+
+.kerkesat-body{
+    display: flex;
+    width: 100%;
+}
+
+.kerkesat-body-wall{
+    width: 80%;
+    padding: 20px;
+    margin-right: 10px;
+}
+
+.kerkesat-card{
+    padding: 15px 0px;
+    display: flex;
+}
+
+
+.kerkesat-card-body {
+    display: flex;
+    border-right: 1px solid #d3d3d3;
+    align-items: flex-start;
+
+}
+
+.kerkesat-card-body  * {
+    margin: 6px 0;
+    text-decoration: none;
+}
+
+
+.kerkesat-card-body-context-info{
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.kerkesat-card-body-context-info div{
+    margin-right: 40px;
+    font-size: 17px;
+}
+
+.kerkesat-card-body-pic{
+    padding: 10px 20px;
+    background-color: white;
+    margin: 5px 20px
+}
+
+.kerkesat-card-body-context h3{
+    text-align: left;
+}
+
+.kerkesat-card-title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px
+
+}
+
+.kerkesat-card-title a{
+    text-decoration: none;
+}
+
+.kerkesat-card-title-type{
+    background-color: #8EA5EF;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+
+}
+
+.kerkesat-card-title-more{
+    background-color: #f4f4f5;
+    padding: 10px 20px;
+    border: 1px solid #d3d3d3;
+}
+
+.kerkesat-card-title-more a {
+   color: green;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+
+.kerkesat-card-title-more:hover {
+    background-color: green;
+    transition-duration: 0.5s;
+}
+
+.kerkesat-card-title-more:hover  > a {
+    color: white;
+    transition-duration: 0.5s;
+}
+
+.active{
+    background-color:  red;
+}
+
+
+.swiper-button-next{
+    display: none;
+}
+
+
+.box{
+    position: relative;
+    background-color: #2AA761;
+    height: 150px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: white
+
+
+
+}
+
+
+.hid-box{
+    position: absolute;
+    top: 100%;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in;
+    transition-delay: 0.2s;
+}
+
+.show-box{
+    position: absolute;
+    top: 60px;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
+    transition-delay: 0.2s;
+
+}
+.box:hover{
+    cursor: pointer;
+}
+
+.box:hover > .hid-box{
+    top: 60px;
+}
+
+
+.box:hover > .show-box{
+    top: -100%;
+}
+
+.kycu-modal > div{
+    margin-bottom: 20px;
+}

@@ -1,0 +1,10 @@
+.swiper-button-next{
+    display: none;
+}
+
+.swiper-button-prev{
+    display: none;
+}
+.swiper-container{
+    transition-duration: 0.3s;
+}
