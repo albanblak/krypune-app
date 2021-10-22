@@ -31,22 +31,17 @@ const ShBox = styled.div`
 */
 
 const GreenLine = () => {
+  return (
+    <div className={"box"}>
+      <div className={"hid-box"}>
+        <h1>Regjistrohu! > </h1>
+      </div>
 
-
-    return (
-        <div className={'box'}>
-            <div className={'hid-box'}>
-                <h1>Regjistrohu! > </h1>
-            </div>
-
-            <div className={'show-box'}>
-                <h1>Nese edhe ti je i interesum me kry pune! </h1>
-            </div>
-        </div>
-
-
-    )
-
-}
+      <div className={"show-box"}>
+        <h1>Nese edhe ti je i interesum me kry pune! </h1>
+      </div>
+    </div>
+  );
+};
 
 export default GreenLine;

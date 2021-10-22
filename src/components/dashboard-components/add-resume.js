@@ -1,84 +1,76 @@
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
-import {useContext, useEffect, useState} from "react";
-import {NavTransparentContext} from "../../utils/NavTransparentContext";
-import {UserContext} from "../../utils/UserContext";
-import {Button} from "@material-ui/core";
-import {BiUpload} from 'react-icons/all'
-import {makeStyles} from '@material-ui/core/styles';
+import { useContext, useEffect, useState } from "react";
+import { NavTransparentContext } from "../../utils/NavTransparentContext";
+import { UserContext } from "../../utils/UserContext";
+import { Button } from "@material-ui/core";
+import { BiUpload } from "react-icons/all";
+import { makeStyles } from "@material-ui/core/styles";
 import ResumeAddUrl from "./dashboard-minicomponents/resume-add-url";
 import ResumeAddEducation from "./dashboard-minicomponents/resume-add-education";
 import ResumeAddEx from "./dashboard-minicomponents/resume-add-ex";
-import {useForm, useFieldArray, Controller} from "react-hook-form";
-import axios from "axios";
-import AuthService from '../../services/auth.service'
+import { useForm, useFieldArray } from "react-hook-form";
 import SubmitResume from "./dashboard-minicomponents/submit-resume";
 
-
-const useStyles = makeStyles((theme) => ({
-    button: {
-        backgroundColor: '#eeeeee',
-        padding: '10px 20px',
-        fontWeight: 'bold',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginTop: '10px',
-        cursor: 'pointer',
-        alignSelf: 'flex-start',
-        marginBottom: '20px',
-        "&:hover": {
-            backgroundColor: 'black',
-            color: 'white'
-        },
-
-        "& > p": {
-            fontWeight: 'bold'
-        }
-
+const useStyles = makeStyles(() => ({
+  button: {
+    backgroundColor: "#eeeeee",
+    padding: "10px 20px",
+    fontWeight: "bold",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginTop: "10px",
+    cursor: "pointer",
+    alignSelf: "flex-start",
+    marginBottom: "20px",
+    "&:hover": {
+      backgroundColor: "black",
+      color: "white",
     },
-    btnUpload: {
-        width: '120px'
-    },
-    textArea: {
-        resize: 'none',
-        height: '150px',
-        width: '100%',
-        outline: 'none',
-        border: 'none',
-        fontSize: '15px'
-    },
-    imageDiv: {
-        width: 'auto',
-        marginBottom: '40px',
-        textAlign: 'left',
-        "& > img": {
-            width: '300px',
-            height: '300px'
-        },
-        "& > label > p": {
-            fontWeight: 'bold'
-        },
-        "& > label > p > span": {
-            fontWeight: 'bold',
-            color: '#888b9a '
-        }
-    },
-    submit: {
-        backgroundColor: 'green',
-        color: 'white',
-        padding: '20px',
-        left: '0px'
-    }
 
-
-}))
-
+    "& > p": {
+      fontWeight: "bold",
+    },
+  },
+  btnUpload: {
+    width: "120px",
+  },
+  textArea: {
+    resize: "none",
+    height: "150px",
+    width: "100%",
+    outline: "none",
+    border: "none",
+    fontSize: "15px",
+  },
+  imageDiv: {
+    width: "auto",
+    marginBottom: "40px",
+    textAlign: "left",
+    "& > img": {
+      width: "300px",
+      height: "300px",
+    },
+    "& > label > p": {
+      fontWeight: "bold",
+    },
+    "& > label > p > span": {
+      fontWeight: "bold",
+      color: "#888b9a ",
+    },
+  },
+  submit: {
+    backgroundColor: "green",
+    color: "white",
+    padding: "20px",
+    left: "0px",
+  },
+}));
 
 const AddResumeDiv = styled.div`
   background-color: green;
-
-`
+`;
 
 const Wrapper = styled.div`
   background-color: whitesmoke;
@@ -93,8 +85,7 @@ const Wrapper = styled.div`
   & > div {
     margin-top: 50px;
   }
-`
-
+`;
 
 const InputWrapper = styled.div`
   margin-bottom: 40px;
@@ -119,7 +110,7 @@ const InputWrapper = styled.div`
     border: none;
     background-color: #fcfcfc;
   }
-`
+`;
 
 const FiedlArrayWrapper = styled.div`
   width: 100%;
@@ -134,281 +125,431 @@ const FiedlArrayWrapper = styled.div`
     margin-bottom: 0;
   }
 
-,
-& > div {
-  padding: 10px;
-  width: 100%;
-  background-color: white;
-}
-`
+  ,
+  & > div {
+    padding: 10px;
+    width: 100%;
+    background-color: white;
+  }
+`;
 
 const HeaderDiv = styled.div`
   width: 100%;
-  background-color: #DDF3FE;
+  background-color: #ddf3fe;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-`
+`;
 
 const RemoveBtn = styled.p`
-
-  display: ${props => props.showImage ? 'inline' : 'none'};
+  display: ${(props) => (props.showImage ? "inline" : "none")};
   margin-top: 40px;
   font-weight: bold;
   margin-bottom: 50px;
   color: red;
   cursor: pointer;
-`
+`;
 
-const AddResume = () => {
-    const [formData, setFormData] = useState({});
-    const [response, setResponse] = useState(false);
-    const [rishikio, setRishiko] = useState(true);
-    const {register, handleSubmit, control, formState: {errors}} = useForm({
-        defaultValues: {
-            urls: [],
-            educations: [],
-            experience: []
-        }
-    });
+const AddResume = ({data, edit, resumeId}) => {
 
-    const {
-        fields: urlsField,
-        append: urlsAppend,
-        remove: urlsRemove
-    } = useFieldArray({control, name: 'urls'})
+  useEffect(() => {
+    if (data) {
+      const urls = data.data.urls.map((item) => ({
+        name: item.name,
+        urlname: item.url,
+        id: item.id
+      }));
+      const educations = data.data.educations.map((item) => ({
+        schoolName: item.schoolname,
+        qualification: item.qualification,
+        startEndDate:
+          new Date(item.startdate).getFullYear() +
+          "-" +
+          new Date(item.startdate).getDate() +
+          "/" +
+          new Date(item.enddate).getFullYear() +
+          "-" +
+          new Date(item.enddate).getDate(),
+        notes: item.notes,
+        id: item.id
+      }));
+      const experience = data.data.experience.map(item => ({
+        employer: item.employer,
+        jobTitle: item.jobtitle,
+        startEndDate: new Date(item.startdate).getFullYear() +
+          "-" +
+          new Date(item.startdate).getDate() +
+          "/" +
+          new Date(item.enddate).getFullYear() +
+          "-" +
+          new Date(item.enddate).getDate(),
+        notes: item.notes,
+        id: item.id
+      }))
 
-    const {
-        fields: educationsField,
-        append: educationsAppend,
-        remove: educationsRemove
-    } = useFieldArray({control, name: 'educations'})
-
-    const {
-        fields: experienceField,
-        append: experienceAppend,
-        remove: experienceRemove
-    } = useFieldArray({control, name: 'experience'})
-
-
-    const onSubmit = (data) => {
-        setFormData(data)
-        setRishiko(false);
-        data.image = image;
-        console.log(data);
+      reset({
+        urls: urls,
+        educations: educations,
+        experience: experience,
+        name: data.data.resume[0].firstName + " " + data.data.resume[0].lastName,
+        email: data.data.resume[0].email,
+        profesioni: data.data.resume[0].profesioni,
+        address: data.data.resume[0].address,
+        norma: data.data.resume[0].norma,
+        content: data.data.resume[0].content,
+        skills: data.data.resume[0].skills,
+      });
     }
+  }, [data]);
 
-    const {navTrans, setNavTrans} = useContext(NavTransparentContext);
-    const {user, setUser} = useContext(UserContext);
-    const classes = useStyles();
-    const [showImage, setShowImage] = useState(false)
-    const [image, setImage] = useState('');
+  const [formData, setFormData] = useState({});
+  const [response, setResponse] = useState(false);
+  const [rishikio, setRishiko] = useState(true);
 
-    useEffect(() => {
-        setNavTrans(true);
-        console.log('something')
-        return () => {
-            setNavTrans(false);
-        }
-    }, []);
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      urls: [],
+      educations: [],
+      experience: [],
+    },
+  });
 
+  const {
+    fields: urlsField,
+    append: urlsAppend,
+    remove: urlsRemove,
+  } = useFieldArray({
+    control,
+    name: "urls",
+    fields: [
+      { name: "test", urlName: "urltest" },
+      { name: "test1", urlName: "test2" },
+    ],
+  });
 
-    const loadFile = (event) => {
-        if (event.target.files.length !== 0) {
-            setImage(event.target.files[0])
-            setShowImage(true);
-        }
+  const {
+    fields: educationsField,
+    append: educationsAppend,
+    remove: educationsRemove,
+  } = useFieldArray({ control, name: "educations" });
+
+  const {
+    fields: experienceField,
+    append: experienceAppend,
+    remove: experienceRemove,
+  } = useFieldArray({ control, name: "experience" });
+
+  const onSubmit = (data) => {
+    const finalData = data;
+    finalData.image = image;
+    console.log(finalData.image);
+    setFormData(finalData);
+    setRishiko(false);
+  };
+
+  const { navTrans, setNavTrans } = useContext(NavTransparentContext);
+  const { user, setUser } = useContext(UserContext);
+  const classes = useStyles();
+  const [showImage, setShowImage] = useState(false);
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    setNavTrans(true);
+    console.log("something");
+    return () => {
+      setNavTrans(false);
+    };
+  }, []);
+
+  const loadFile = (event) => {
+    if (event.target.files.length !== 0) {
+      setImage(event.target.files[0]);
+      setShowImage(true);
     }
+  };
 
+  return rishikio ? (
+    <AddResumeDiv>
+      <Sidebar />
+      <Wrapper>
+        <div>
+          <h2 style={{ textAlign: "left", marginBottom: "10px" }}>
+            Submit Resume
+          </h2>
+          <p style={{ fontSize: "15px" }}>Ballina > Aktivitet e Profilit</p>
+        </div>
 
-    return (
+        <HeaderDiv>
+          <div style={{ textAlign: "left", color: "#4587A9" }}>
+            <h3>Miresevini ne krypune</h3>
+            <p>momentalisht jeni kycur si {user.userData.firstName}</p>
+          </div>
+          <Button style={{ display: "block", fontWeight: "bold" }}>
+            {" "}
+            Ckycu
+          </Button>
+        </HeaderDiv>
 
+        <div
+          style={{ width: "100%", backgroundColor: "white", padding: "30px" }}
+        >
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <InputWrapper>
+              <label>
+                <p>Emri Juaj</p>
+                {errors.name && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <input
+                    {...register("name", { required: true })}
+                    placeholder={"Your full name"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-        rishikio ?
+            <InputWrapper>
+              <label>
+                <p>Email adresa</p>
+                {errors.email && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <input
+                    {...register("email", { required: true })}
+                    placeholder={"Email Adressa"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-            <AddResumeDiv>
-                <Sidebar/>
-                <Wrapper>
-                    <div>
-                        <h2 style={{textAlign: 'left', marginBottom: '10px'}}>Submit Resume</h2>
-                        <p style={{fontSize: '15px'}}>Ballina > Aktivitet e Profilit</p>
-                    </div>
+            <InputWrapper>
+              <label>
+                <p>Profesioni</p>
+                {errors.profesioni && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <input
+                    {...register("profesioni", { required: true })}
+                    placeholder={"P.SH Dizajner Grafik"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-                    <HeaderDiv>
-                        <div style={{textAlign: 'left', color: '#4587A9'}}>
-                            <h3>Miresevini ne krypune</h3>
-                            <p>momentalisht jeni kycur si {user.userData.firstName}</p>
-                        </div>
-                        <Button style={{display: 'block', fontWeight: 'bold'}}> Ckycu</Button>
-                    </HeaderDiv>
+            <InputWrapper>
+              <label>
+                <p>Lokacioni</p>
+                {errors.address && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <input
+                    {...register("address", { required: true })}
+                    placeholder={"P.SH Rr. Rexhep Mala Nr.20 Prishtine, Kosove"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-                    <div style={{width: '100%', backgroundColor: 'white', padding: '30px'}}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={classes.imageDiv}>
+              <img
+                src={image ? URL.createObjectURL(image) : ""}
+                alt={"fotoja"}
+                style={{ display: showImage ? "block" : "none" }}
+              />
+              <RemoveBtn
+                showImage={showImage}
+                onClick={() => {
+                  setShowImage(false);
+                  setImage("");
+                }}
+              >
+                (x)Largo
+              </RemoveBtn>
+              <label>
+                <p>
+                  Foto <span>(opcionale)</span>
+                </p>
+                <input
+                  style={{ display: "none" }}
+                  type={"file"}
+                  onChange={loadFile}
+                />
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Emri Juaj</p>
-                                    {errors.name &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <input {...register('name', {required: true})} placeholder={'Your full name'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+                <div className={classes.button + " " + classes.btnUpload}>
+                  <BiUpload size={30} />
+                  <p>Ngarko</p>
+                </div>
+              </label>
+            </div>
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Email adresa</p>
-                                    {errors.email &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <input {...register('email', {required: true})} placeholder={'Email Adressa'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+            <InputWrapper>
+              <label>
+                <p>
+                  Norma minimale / ore(€)
+                  <span style={{ color: "#888B9A" }}>(opcionale)</span>
+                </p>
+                {errors.norma && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <input
+                    {...register("norma", { required: true })}
+                    placeholder={"P.SH 20"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Profesioni</p>
-                                    {errors.profesioni &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <input {...register('profesioni', {required: true})}
-                                               placeholder={'P.SH Dizajner Grafik'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+            <InputWrapper>
+              <label>
+                <p>Permbajtja e Rezymes</p>
+                {errors.content && (
+                  <span style={{ color: "red", textAlign: "left" }}>
+                    This field is required
+                  </span>
+                )}
+                <div>
+                  <textarea
+                    {...register("content", { required: true })}
+                    className={classes.textArea}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Lokacioni</p>
-                                    {errors.address &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <input {...register('address', {required: true})}
-                                               placeholder={'P.SH Rr. Rexhep Mala Nr.20 Prishtine, Kosove'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+            <InputWrapper>
+              <label>
+                <p>
+                  {" "}
+                  Aftesite<span style={{ color: "#888B9A" }}>(opcionale)</span>
+                </p>
+                <div>
+                  <input
+                    {...register("skills")}
+                    placeholder={"Ndaj me presje aftesite relevante"}
+                    type={"text"}
+                  />
+                </div>
+              </label>
+            </InputWrapper>
 
-                            <div className={classes.imageDiv}>
-                                <img src={image ? URL.createObjectURL(image) : ''} alt={'fotoja'} style={{display: showImage ? 'block' : 'none'}}/>
-                                <RemoveBtn showImage={showImage} onClick={() => {
-                                    setShowImage(false);
-                                    setImage('')
-                                }}>(x)Largo</RemoveBtn>
-                                <label>
-                                    <p>Foto <span>(opcionale)</span></p>
-                                    <input   style={{display: 'none'}} type={'file'}
-                                            onChange={loadFile}/>
+            <FiedlArrayWrapper>
+              <h3>URL</h3>
+              <div>
+                {urlsField.map((field, index) => (
+                  <ResumeAddUrl
+                    remove={urlsRemove}
+                    field={field}
+                    reg={register}
+                    ind={index}
+                    key={field.id}
+                  />
+                ))}
+              </div>
+              <Button
+                className={classes.button}
+                onClick={(e) => urlsAppend({})}
+              >
+                Shto url
+              </Button>
+              <p>
+                Mund të shtoni ndonjë link të ndonjë web-faqeje apo të rrjeteve
+                sociale
+              </p>
+            </FiedlArrayWrapper>
 
-                                    <div className={classes.button + " " + classes.btnUpload}>
-                                        <BiUpload size={30}/>
-                                        <p>Ngarko</p>
-                                    </div>
-                                </label>
-                            </div>
+            <FiedlArrayWrapper>
+              <h3>Edukimi</h3>
+              <div>
+                {educationsField.map((field, index) => (
+                  <ResumeAddEducation
+                    remove={educationsRemove}
+                    ind={index}
+                    key={field.id}
+                    field={field}
+                    reg={register}
+                  />
+                ))}
+              </div>
+              <Button
+                className={classes.button}
+                onClick={(e) => educationsAppend({})}
+              >
+                Shto
+              </Button>
+            </FiedlArrayWrapper>
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Norma minimale / ore(€)<span style={{color: '#888B9A'}}>(opcionale)</span></p>
-                                    {errors.norma &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <input {...register('norma', {required: true})} placeholder={'P.SH 20'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+            <FiedlArrayWrapper>
+              <h3>Pervoja</h3>
+              <div>
+                {experienceField.map((field, index) => (
+                  <ResumeAddEx
+                    key={field.id}
+                    reg={register}
+                    ind={index}
+                    remove={experienceRemove}
+                    field={field}
+                  />
+                ))}
+              </div>
+              <Button
+                className={classes.button}
+                onClick={(e) => experienceAppend({})}
+              >
+                Shto
+              </Button>
+            </FiedlArrayWrapper>
 
-                            <InputWrapper>
-                                <label>
-                                    <p>Permbajtja e Rezymes</p>
-                                    {errors.content &&
-                                    <span style={{color: 'red', textAlign: 'left'}}>This field is required</span>}
-                                    <div>
-                                        <textarea {...register('content', {required: true})}
-                                                  className={classes.textArea}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
+            <input className={classes.submit} type={"submit"} />
+          </form>
+        </div>
 
-                            <InputWrapper>
-                                <label>
-                                    <p> Aftesite<span style={{color: '#888B9A'}}>(opcionale)</span></p>
-                                    <div>
-                                        <input {...register('skills')} placeholder={'Ndaj me presje aftesite relevante'}
-                                               type={'text'}/>
-                                    </div>
-                                </label>
-                            </InputWrapper>
-
-                            <FiedlArrayWrapper>
-                                <h3>URL</h3>
-                                <div>
-                                    {urlsField.map((field, index) => (
-                                        <ResumeAddUrl remove={urlsRemove} field={field} reg={register} ind={index}
-                                                      key={field.id}/>
-                                    ))}
-                                </div>
-                                <Button className={classes.button} onClick={(e) => urlsAppend({})}>
-                                    Shto url
-                                </Button>
-                                <p>Mund të shtoni ndonjë link të ndonjë web-faqeje apo të rrjeteve sociale</p>
-                            </FiedlArrayWrapper>
-
-                            <FiedlArrayWrapper>
-                                <h3>Edukimi</h3>
-                                <div>
-                                    {educationsField.map((field, index) => (
-                                        <ResumeAddEducation remove={educationsRemove} ind={index} key={field.id}
-                                                            field={field} reg={register}/>
-                                    ))}
-                                </div>
-                                <Button className={classes.button} onClick={(e) => educationsAppend({})}>
-                                    Shto
-                                </Button>
-                            </FiedlArrayWrapper>
-
-                            <FiedlArrayWrapper>
-                                <h3>Pervoja</h3>
-                                <div>
-                                    {experienceField.map((field, index) => (
-                                        <ResumeAddEx key={field.id} reg={register} ind={index} remove={experienceRemove}
-                                                     field={field}/>
-                                    ))}
-                                </div>
-                                <Button className={classes.button} onClick={(e) => experienceAppend({})}>
-                                    Shto
-                                </Button>
-                            </FiedlArrayWrapper>
-
-
-                            <input className={classes.submit} type={'submit'}/>
-                        </form>
-                    </div>
-
-                    <div>
-                        <p style={{display: response ? 'block' : 'none', fontSize: '15px', color: 'green'}}>u shtua me
-                            sukses</p>
-                    </div>
-                </Wrapper>
-            </AddResumeDiv>
-            :
-            <>
-                <Sidebar/>
-                <SubmitResume data={formData} setRishiko={setRishiko}/>
-            </>
-
-    )
-}
+        <div>
+          <p
+            style={{
+              display: response ? "block" : "none",
+              fontSize: "15px",
+              color: "green",
+            }}
+          >
+            u shtua me sukses
+          </p>
+        </div>
+      </Wrapper>
+    </AddResumeDiv>
+  ) : (
+    <>
+      <Sidebar />
+      <SubmitResume data={formData} setRishiko={setRishiko} edit={edit} resumeId={resumeId}/>
+    </>
+  );
+};
 
 export default AddResume;
-
-
-

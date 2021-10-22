@@ -10,6 +10,8 @@ import ProtectedRoute from './components/protectedRoute'
 import Dashboard from "./components/dashboard";
 import {NavTransparentContext} from './utils/NavTransparentContext'
 import AddResume from "./components/dashboard-components/add-resume";
+import ResumeManager from "./components/dashboard-components/resume-manager";
+import EditResume from "./components/dashboard-components/edit-resume";
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
                           <Route exact path={'/'} component={Home}/>
                           <ProtectedRoute exact path={'/dashboard/page'} component={Dashboard}/>
                           <ProtectedRoute exact path={'/dashboard/addresume'} component={AddResume}/>
+                          <ProtectedRoute exact path={'/dashboard/resumemanager'} component={ResumeManager}/>
+                          <ProtectedRoute exact path={'/dashboard/editresume/:id'} component={EditResume}/>
                       </Switch>
                   </NavTransparentContext.Provider>
               </UserContext.Provider>
