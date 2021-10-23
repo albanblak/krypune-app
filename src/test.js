@@ -4,4 +4,4 @@ console.log('test1.js');
 
 
 
-console.log('test2 from web');
+console.log('test2 from ide1');
